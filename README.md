@@ -56,3 +56,8 @@ Steps attacker takes:
 
 Result --> All traffic between victim and router passes through the attacker first.
 Further perform several attacks --> Man-in-the-Middle, modify data, drop data.
+
+
+## Old with no protection
+http, ftp, telnet -> uses plain text -> no encryption while sending data
+DIR - STOPS
