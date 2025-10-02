@@ -15,7 +15,7 @@ from sklearn.metrics import (
 )
 
 # --- 1. Data Loading ---
-file_path = r"D:\Desktop\Sem_3\CEN\combined_arp_dataset.csv"
+file_path = r"..\combined_arp_dataset.csv"
 df = pd.read_csv(file_path)
 
 # --- 2. Preprocessing Steps ---
