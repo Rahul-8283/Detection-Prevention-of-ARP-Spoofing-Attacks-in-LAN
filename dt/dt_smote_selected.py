@@ -18,7 +18,7 @@ from sklearn.metrics import (
 
 # --- CONFIGURATION ---
 TARGET_LABEL = "Label"
-file_path = r"D:\Desktop\Sem_3\CEN\combined_arp_dataset.csv"
+file_path = r"..\combined_arp_dataset.csv"
 # CORRECTED 15 features selected by the Correlation Filter method (Table 2)
 SELECTED_FEATURES = [
     "Dst Port", "Fwd PSH Flags", "Fwd URG Flags",
