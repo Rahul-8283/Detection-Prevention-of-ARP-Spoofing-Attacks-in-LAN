@@ -35,7 +35,7 @@ from sklearn.decomposition import PCA
 from collections import Counter
 
 # ---------------- Config ----------------
-INPUT_CSV = r"D:\Desktop\Sem_3\CEN\Detection-Prevention-of-ARP-Spoofing-Attacks-in-LAN\iotid20_dataset.csv"
+INPUT_CSV = r"..\iotid20_dataset.csv"
 PROCESSED_OUT = "processed_full_dataset.csv"
 TEST_PRED_OUT = "knn_full_test_predictions.csv"
 
