@@ -20,7 +20,7 @@ import matplotlib.pyplot as plt
 from xgboost import XGBClassifier, plot_importance
 
 # ---------------- Config ----------------
-INPUT_CSV = r"D:\Desktop\Sem_3\CEN\Detection-Prevention-of-ARP-Spoofing-Attacks-in-LAN\iotid20_dataset.csv"
+INPUT_CSV = r"iotid20_dataset.csv"
 PROC_OUT = "processed_xgb_dataset.csv"
 
 # Choose target: "Label", "Category", "Sub-category"
@@ -133,4 +133,5 @@ fig, ax = plt.subplots(figsize=(10,6))
 plot_importance(xgb_model, max_num_features=15, importance_type="weight", ax=ax)
 ax.set_title(f"Top 15 Important Features - XGBoost ({TARGET} classification)")
 plt.show()
+
 
