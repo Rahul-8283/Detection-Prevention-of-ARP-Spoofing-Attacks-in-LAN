@@ -59,7 +59,7 @@ FEATURES = [
 ]
 
 # Load dataset
-df = pd.read_csv(r"D:\Desktop\Sem_3\CEN\combined_arp_dataset.csv")
+df = pd.read_csv(r"..\combined_arp_dataset.csv")
 
 # Drop ID-like columns (adjust based on your dataset)
 drop_candidates = ["Flow ID", "Src IP", "Dst IP", "Timestamp", "source_file"]
