@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Detection Results - ARP Spoofing Detection System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .summary {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .summary-box {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            flex: 1;
+            margin: 0 10px;
+        }
+        .summary-box.high-risk {
+            background-color: #f8d7da;
+            border: 2px solid #dc3545;
+        }
+        .summary-box.low-risk {
+            background-color: #d4edda;
+            border: 2px solid #28a745;
+        }
+        .summary-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: #333;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th {
+            background-color: #007bff;
+            color: white;
+            padding: 12px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+        td {
+            padding: 10px;
+            border: 1px solid #ddd;
+        }
+        tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+        tr:hover {
+            background-color: #e8f4fd;
+        }
+        .risk-high {
+            background-color: #f8d7da !important;
+            color: #721c24;
+            font-weight: bold;
+        }
+        .risk-low {
+            background-color: #d4edda !important;
+            color: #155724;
+        }
+        .confidence-high {
+            color: #28a745;
+            font-weight: bold;
+        }
+        .confidence-medium {
+            color: #ffc107;
+            font-weight: bold;
+        }
+        .confidence-low {
+            color: #dc3545;
+            font-weight: bold;
+        }
+        .back-button {
+            display: inline-block;
+            background-color: #6c757d;
+            color: white;
+            padding: 12px 24px;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        .back-button:hover {
+            background-color: #545b62;
+        }
+        .no-data {
+            text-align: center;
+            padding: 50px;
+            color: #666;
+        }
+        .alert {
+            background-color: #fff3cd;
+            border: 1px solid #ffeaa7;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🛡️ Network Flow Analysis Results</h1>
+        
+        {% if rows %}
+            {% set high_risk = rows | selectattr("Risk_Level", "equalto", "HIGH") | list %}
+            {% set low_risk = rows | selectattr("Risk_Level", "equalto", "LOW") | list %}
+            
+            <div class="summary">
+                <div class="summary-box">
+                    <div class="summary-number">{{ rows|length }}</div>
+                    <div>Total Flows Analyzed</div>
+                </div>
+                <div class="summary-box high-risk">
+                    <div class="summary-number">{{ high_risk|length }}</div>
+                    <div>High Risk (Potential Threats)</div>
+                </div>
+                <div class="summary-box low-risk">
+                    <div class="summary-number">{{ low_risk|length }}</div>
+                    <div>Low Risk (Benign Traffic)</div>
+                </div>
+            </div>
+
+            {% if high_risk %}
+                <div class="alert">
+                    <strong>⚠️ Security Alert:</strong> {{ high_risk|length }} potentially malicious flow(s) detected! 
+                    Please review the high-risk entries below.
+                </div>
+            {% endif %}
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Flow #</th>
+                        <th>Source Port</th>
+                        <th>Destination Port</th>
+                        <th>Flow Duration</th>
+                        <th>Predicted Category</th>
+                        <th>Confidence</th>
+                        <th>Risk Level</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in rows %}
+                        <tr class="{% if row.get('Risk_Level') == 'HIGH' %}risk-high{% else %}risk-low{% endif %}">
+                            <td>{{ row.get('Row', loop.index) }}</td>
+                            <td>{{ row.get('Src_Port', 'N/A') }}</td>
+                            <td>{{ row.get('Dst_Port', 'N/A') }}</td>
+                            <td>{{ row.get('Flow_Duration', 'N/A') }}</td>
+                            <td>{{ row.get('Predicted_Category', 'Unknown') }}</td>
+                            <td class="{% if row.get('Confidence', '0')|float > 0.8 %}confidence-high{% elif row.get('Confidence', '0')|float > 0.5 %}confidence-medium{% else %}confidence-low{% endif %}">
+                                {{ row.get('Confidence', 'N/A') }}
+                            </td>
+                            <td>
+                                {% if row.get('Risk_Level') == 'HIGH' %}
+                                    🚨 HIGH RISK
+                                {% else %}
+                                    ✅ LOW RISK
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            
+            <!-- Raw Features Section (Collapsible) -->
+            <details style="margin-top: 30px;">
+                <summary style="cursor: pointer; font-weight: bold; padding: 10px; background-color: #f8f9fa; border-radius: 5px;">
+                    📊 View Raw Network Features (Technical Details)
+                </summary>
+                <table style="margin-top: 15px;">
+                    <thead>
+                        <tr>
+                            {% if rows[0] %}
+                                {% for key in rows[0].keys() %}
+                                    <th>{{ key.replace('_', ' ').title() }}</th>
+                                {% endfor %}
+                            {% endif %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in rows %}
+                            <tr>
+                                {% for val in row.values() %}
+                                    <td>{{ val }}</td>
+                                {% endfor %}
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </details>
+            
+        {% else %}
+            <div class="no-data">
+                <h3>📭 No Network Flows Detected</h3>
+                <p>No network traffic was captured during the monitoring period.</p>
+                <p>This could be due to:</p>
+                <ul style="text-align: left; display: inline-block;">
+                    <li>Low network activity during the capture window</li>
+                    <li>Network interface not properly configured</li>
+                    <li>Insufficient monitoring duration</li>
+                </ul>
+                <p>Try increasing the monitoring duration or check your network activity.</p>
+            </div>
+        {% endif %}
+        
+        <div style="text-align: center;">
+            <a href="/download" class="back-button" style="background-color: #28a745; margin-right: 10px;">💾 Download Results (CSV)</a>
+            <a href="/" class="back-button">🏠 Start New Monitoring Session</a>
+        </div>
+    </div>
+</body>
+</html>
