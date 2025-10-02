@@ -18,9 +18,10 @@ from sklearn.impute import SimpleImputer
 from sklearn.metrics import classification_report, confusion_matrix, ConfusionMatrixDisplay
 import matplotlib.pyplot as plt
 from xgboost import XGBClassifier, plot_importance
+import joblib 
 
 # ---------------- Config ----------------
-INPUT_CSV = r"D:\Desktop\Sem_3\CEN\Detection-Prevention-of-ARP-Spoofing-Attacks-in-LAN\iotid20_dataset.csv"
+INPUT_CSV = r"iotid20_dataset.csv"
 PROC_OUT = "processed_xgb_dataset.csv"
 
 # Choose target: "Label", "Category", "Sub-category"
@@ -99,7 +100,7 @@ xgb_model = XGBClassifier(
 )
 
 xgb_model.fit(X_train, y_train)
-
+joblib.dump(xgb_model,"xgb_Sub-category.pkl")
 # ---------------- Evaluate ----------------
 y_pred = xgb_model.predict(X_test)
 

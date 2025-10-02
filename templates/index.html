@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ARP Spoofing Detection System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+        input[type="number"] {
+            width: 100px;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-left: 10px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .info {
+            background-color: #e7f3ff;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+            border-left: 4px solid #007bff;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🛡️ ARP Spoofing Detection System</h1>
+        
+        <form method="POST" action="/sniff">
+            <div class="form-group">
+                <label for="duration">Monitoring Duration (seconds):</label>
+                <input type="number" id="duration" name="duration" value="60" min="10" max="3600">
+                <button type="submit">🚀 Start Network Monitoring</button>
+            </div>
+        </form>
+        
+        <div class="info">
+            <strong>📋 Instructions:</strong>
+            <ul>
+                <li>Enter the duration in seconds (10-3600 seconds)</li>
+                <li>Click "Start Network Monitoring" to begin packet capture</li>
+                <li>The system will analyze network flows and detect potential ARP spoofing attacks</li>
+                <li>Results will be displayed with risk levels and confidence scores</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

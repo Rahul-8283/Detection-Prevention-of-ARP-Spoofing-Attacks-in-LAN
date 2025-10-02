@@ -16,7 +16,7 @@ from sklearn.metrics import (
 
 # --- 1. Define Target and Load Data ---
 TARGET_LABEL = "Label"
-file_path = r"D:\Desktop\Sem_3\CEN\combined_arp_dataset.csv"
+file_path = r"..\combined_arp_dataset.csv"
 df = pd.read_csv(file_path)
 
 # --- 2. Preprocessing and Feature Engineering ---

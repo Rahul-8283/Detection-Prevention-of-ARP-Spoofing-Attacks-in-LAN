@@ -132,7 +132,7 @@ except Exception as e:
     raise RuntimeError("imblearn is required. Install with: pip install imbalanced-learn") from e
 
 # ---------------- Config ----------------
-INPUT = r"D:\Desktop\Sem_3\CEN\processed_dataset.csv"   # file you saved earlier
+INPUT = r"..\processed_dataset.csv"   # file you saved earlier
 TEST_SIZE = 0.30
 RANDOM_STATE = 42
 KNN_PARAMS = dict(n_neighbors=5, weights="uniform", leaf_size=30)
