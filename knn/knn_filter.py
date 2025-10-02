@@ -26,7 +26,7 @@ from sklearn.metrics import classification_report, confusion_matrix, ConfusionMa
 from collections import Counter
 
 # ---------------- Config ----------------
-INPUT_CSV = r"D:\Desktop\Sem_3\CEN\combined_arp_dataset.csv"   # your binary file: Normal + ARP
+INPUT_CSV = r"..\combined_arp_dataset.csv"   # your binary file: Normal + ARP
 PROC_OUT = "processed_arp_corr_selected.csv"
 
 RANDOM_STATE = 42
