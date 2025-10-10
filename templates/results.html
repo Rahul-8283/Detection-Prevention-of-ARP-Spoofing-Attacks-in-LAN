@@ -122,27 +122,38 @@
         <h1>🛡️ Network Flow Analysis Results</h1>
         
         {% if rows %}
-            {% set high_risk = rows | selectattr("Risk_Level", "equalto", "HIGH") | list %}
-            {% set low_risk = rows | selectattr("Risk_Level", "equalto", "LOW") | list %}
-            
+            {# Compute counts defensively since Risk_Level may be 'HIGH RISK' or 'LOW RISK' #}
+            {% set total = rows|length %}
+            {# Use namespace so increments inside the loop persist #}
+            {% set ns = namespace(high=0, low=0) %}
+            {% for r in rows %}
+                {% if 'HIGH' in (r.get('Risk_Level') or '') %}
+                    {% set ns.high = ns.high + 1 %}
+                {% else %}
+                    {% set ns.low = ns.low + 1 %}
+                {% endif %}
+            {% endfor %}
+            {% set high_count = ns.high %}
+            {% set low_count = ns.low %}
+
             <div class="summary">
                 <div class="summary-box">
-                    <div class="summary-number">{{ rows|length }}</div>
+                    <div class="summary-number">{{ total }}</div>
                     <div>Total Flows Analyzed</div>
                 </div>
                 <div class="summary-box high-risk">
-                    <div class="summary-number">{{ high_risk|length }}</div>
+                    <div class="summary-number">{{ high_count }}</div>
                     <div>High Risk (Potential Threats)</div>
                 </div>
                 <div class="summary-box low-risk">
-                    <div class="summary-number">{{ low_risk|length }}</div>
+                    <div class="summary-number">{{ low_count }}</div>
                     <div>Low Risk (Benign Traffic)</div>
                 </div>
             </div>
 
-            {% if high_risk %}
+            {% if high_count > 0 %}
                 <div class="alert">
-                    <strong>⚠️ Security Alert:</strong> {{ high_risk|length }} potentially malicious flow(s) detected! 
+                    <strong>Security Alert:</strong> {{ high_count }} potentially malicious flow(s) detected! 
                     Please review the high-risk entries below.
                 </div>
             {% endif %}
@@ -161,7 +172,7 @@
                 </thead>
                 <tbody>
                     {% for row in rows %}
-                        <tr class="{% if row.get('Risk_Level') == 'HIGH' %}risk-high{% else %}risk-low{% endif %}">
+                        <tr class="{% if 'HIGH' in (row.get('Risk_Level') or '') %}risk-high{% else %}risk-low{% endif %}">
                             <td>{{ row.get('Row', loop.index) }}</td>
                             <td>{{ row.get('Src_Port', 'N/A') }}</td>
                             <td>{{ row.get('Dst_Port', 'N/A') }}</td>
@@ -171,10 +182,10 @@
                                 {{ row.get('Confidence', 'N/A') }}
                             </td>
                             <td>
-                                {% if row.get('Risk_Level') == 'HIGH' %}
-                                    🚨 HIGH RISK
+                                {% if 'HIGH' in (row.get('Risk_Level') or '') %}
+                                    HIGH RISK
                                 {% else %}
-                                    ✅ LOW RISK
+                                    LOW RISK
                                 {% endif %}
                             </td>
                         </tr>

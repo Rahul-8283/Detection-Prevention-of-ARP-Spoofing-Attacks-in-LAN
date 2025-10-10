@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Single Row Prediction</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <style>
+        :root{ --bg:#f4f6f8; --card:#fff; --muted:#6b7280; --accent:#2b6cb0; --danger:#c53030; --success:#2f855a }
+        html,body{height:100%;margin:0;font-family:Inter, 'Segoe UI', Roboto, Arial, sans-serif;background:var(--bg)}
+        .wrap{min-height:100%;display:flex;align-items:center;justify-content:center;padding:40px}
+        .card{width:100%;max-width:920px;background:var(--card);border-radius:12px;padding:28px;box-shadow:0 10px 30px rgba(18,24,31,0.06)}
+        .header{display:flex;align-items:center;justify-content:space-between;gap:16px}
+        h1{margin:0;font-size:20px;color:#111827}
+        .badge{padding:8px 14px;border-radius:999px;color:white;font-weight:700;display:inline-flex;align-items:center;gap:8px}
+        .badge.attack{background:var(--danger)}
+        .badge.normal{background:var(--success)}
+        .confidence{margin-top:10px;height:12px;background:#e6eef8;border-radius:999px;overflow:hidden}
+        .confidence > .bar{height:100%;background:linear-gradient(90deg,#60a5fa,#2b6cb0);width:0}
+        .body{display:flex;gap:28px;margin-top:20px;flex-wrap:wrap}
+        .features{flex:1 1 420px;background:#fbfdff;border-radius:8px;padding:18px;border:1px solid #eef2f6}
+        .features-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px 20px}
+        .feature-label{color:var(--muted);font-size:13px}
+        .feature-value{font-family:Menlo,monospace;font-size:13px;color:#111827}
+        .meta{flex:0 0 220px;min-width:200px}
+        .back{display:inline-block;padding:10px 16px;background:#6c757d;color:white;border-radius:8px;text-decoration:none}
+        @media (max-width:720px){.body{flex-direction:column}.meta{order:2}}
+    </style>
+ </head>
+<body>
+    <div class="wrap">
+    <div class="card">
+        <div class="header">
+            <h1>Prediction</h1>
+            {% if not error %}
+                {# Color badge green for benign/normal, red otherwise #}
+                {% set label_lower = result.Predicted_Category.lower() if result.Predicted_Category else '' %}
+                {% if 'benign' in label_lower or 'normal' in label_lower %}
+                    <div class="badge normal">Result: {{ result.Predicted_Category }}</div>
+                {% else %}
+                    <div class="badge attack">Result: {{ result.Predicted_Category }}</div>
+                {% endif %}
+            {% endif %}
+        </div>
+
+        {% if error %}
+            <div style="color:#b30000;margin-top:12px;font-weight:600">Error: {{ error }}</div>
+        {% else %}
+            <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:48px 10px">
+                <div style="font-size:34px;font-weight:800;color:#111827;margin-bottom:6px;text-align:center">{{ result.Predicted_Category }}</div>
+                <div style="color:var(--muted);margin-bottom:10px;font-size:16px">Result Type</div>
+
+                {% if result.features %}
+                    {# Always show the fixed 15 features (training order) with their values for this row #}
+                    {% set expected = [
+                        'Src Port', 'Dst Port', 'Flow IAT Min', 'FWD Init Win Bytes', 'Fwd IAT Min',
+                        'Flow Duration', 'Flow Bytes/s', 'Fwd IAT Total', 'Bwd Init Win Bytes',
+                        'Fwd IAT Mean', 'Bwd Packets/s', 'Packet Length Std', 'Fwd Packets/s',
+                        'Total Length of Fwd Packet', 'Bwd Bulk Rate Avg'
+                    ] %}
+
+                    <div style="margin-top:12px;text-align:center">
+                        <div style="font-weight:600;color:#111827;margin-bottom:8px">Feature values for row {{ result.Row }}</div>
+                        <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:10px;">
+                            {% for name in expected %}
+                                {% set v = result.features.get(name) %}
+                                <div style="min-width:200px;max-width:320px;padding:10px;background:#fbfdff;border-radius:8px;border:1px solid #eef2f6;">
+                                    <div style="color:var(--muted);font-size:13px">{{ name }}</div>
+                                    <div style="font-family:Menlo,monospace;font-size:14px;color:#111827">{{ (v is not none) and ('%.6g' % v) or 'N/A' }}</div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endif %}
+                <div>
+                    <a class="back" href="/">← Back</a>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+    </div>
+</body>
+</html>
