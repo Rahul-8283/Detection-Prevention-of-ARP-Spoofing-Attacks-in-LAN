@@ -1,15 +1,3 @@
-#!/usr/bin/env python3
-"""
-Flexible XGBoost Multi-class Classification
-Works with: Label (binary), Category (multi), Sub-category (multi)
-
-Preprocessing:
-1. Drop ID-like columns
-2. Drop duplicates
-3. Median imputation
-4. Min-Max normalization
-"""
-
 import pandas as pd
 import numpy as np
 from sklearn.model_selection import train_test_split
@@ -26,7 +14,7 @@ PROC_OUT = "processed_xgb_dataset.csv"
 
 # Choose target: "Label", "Category", "Sub-category"
 TARGET = "Sub-category"    
-
+print("hii")
 RANDOM_STATE = 42
 TEST_SIZE = 0.3
 

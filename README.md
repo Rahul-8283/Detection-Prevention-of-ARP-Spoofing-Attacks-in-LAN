@@ -1,3 +1,34 @@
+## ARP Spoofing Detection and Prevention System
+
+This project implements a real-time ARP spoofing detection system using machine learning techniques to analyze network traffic and identify potential attacks.
+
+## 🚀 **NEW: Web-based Real-time Detection Interface**
+
+The system now includes a user-friendly web interface for real-time network monitoring and threat detection:
+
+### **Features:**
+- **Real-time packet capture** with configurable duration (10-3600 seconds)
+- **ML-powered prediction** using trained XGBoost model  
+- **Risk assessment** with confidence scores
+- **Visual dashboard** showing threat levels and statistics
+- **CSV export** functionality for analysis
+- **Professional UI** with color-coded risk indicators
+
+### **How to Use:**
+1. Run the web application: `python app.py`
+2. Open your browser to `http://127.0.0.1:5000`
+3. Enter monitoring duration and click "Start Network Monitoring"
+4. View results with predicted threat categories and risk levels
+5. Download results as CSV for further analysis
+
+### **Model Performance:**
+- Uses 15 selected network flow features
+- Trained on IoTID20 dataset
+- Detects multiple attack types: ARP Spoofing, DDoS, Mirai botnet, etc.
+- Provides confidence scores for each prediction
+
+---
+
 ## Computer Networks S3
 
 1) what will be the role of wireshark and how will you use it --> wireshark at attacker, using hub

@@ -1,7 +1,3 @@
-#!/usr/bin/env python3
-"""
-Real-time ARP Spoofing Prediction using trained XGBoost model
-"""
 
 import pandas as pd
 import numpy as np
@@ -9,14 +5,6 @@ import joblib
 import os
 
 def predict_from_csv(csv_file="live_flow_features.csv"):
-    """
-    Load the live flow features and make predictions using the trained model
-    
-    Returns:
-        List of dictionaries containing predictions and confidence scores
-    """
-    
-    # File paths for the trained models and preprocessors
     MODEL_PATH = "xgb_mcc_Sub-category-selected.pkl"
     SCALER_PATH = "xgb_scaler_Sub-category.pkl"
     IMPUTER_PATH = "xgb_imputer_Sub-category.pkl"
@@ -34,8 +22,9 @@ def predict_from_csv(csv_file="live_flow_features.csv"):
         print(f"Error: CSV file {csv_file} not found!")
         return []
     
+    CONFIDENCE_THRESHOLD = 0.7
+
     try:
-        # Load the trained model and preprocessors
         model = joblib.load(MODEL_PATH)
         scaler = joblib.load(SCALER_PATH)
         imputer = joblib.load(IMPUTER_PATH)
@@ -86,15 +75,22 @@ def predict_from_csv(csv_file="live_flow_features.csv"):
         for i in range(len(predictions)):
             max_prob = np.max(prediction_probabilities[i])
             confidence = f"{max_prob:.4f}"
-            
+
+            label = predicted_labels[i]
+            # Determine risk level using threshold
+            if label != "Benign" and max_prob >= CONFIDENCE_THRESHOLD:
+                risk = "HIGH RISK"
+            else:
+                risk = "LOW RISK"
+
             result = {
                 "Row": i + 1,
                 "Src_Port": int(X.iloc[i]["Src Port"]),
                 "Dst_Port": int(X.iloc[i]["Dst Port"]),
                 "Flow_Duration": f"{X.iloc[i]['Flow Duration']:.6f}",
-                "Predicted_Category": predicted_labels[i],
+                "Predicted_Category": label,
                 "Confidence": confidence,
-                "Risk_Level": "HIGH" if predicted_labels[i] != "Benign" else "LOW"
+                "Risk_Level": risk
             }
             results.append(result)
         
